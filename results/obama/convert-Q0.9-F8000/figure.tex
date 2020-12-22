@@ -1,0 +1,104 @@
+\documentclass[margin=5mm]{standalone}
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+\pgfplotsset{compat=1.13}
+\usepgfplotslibrary{groupplots}
+
+\begin{document}
+\begin{tikzpicture}
+\begin{groupplot}[
+group style={
+  group size=1 by 5,
+  vertical sep=0.2cm,
+  xlabels at=edge bottom,
+  xticklabels at=edge bottom,
+},
+enlargelimits=false,
+width=8cm, height=3.5cm,
+xmajorgrids, ymajorgrids,
+scaled ticks = false,
+tick label style={/pgf/number format/.cd, fixed, fixed zerofill,
+  int detect, 1000 sep={}},
+ylabel near ticks,
+legend columns=1,
+]
+
+\nextgroupplot[
+ymin=0.65,ymax=1,
+ylabel={SSIM},
+legend pos=south east,
+ytick={0.7,0.8,0.9},
+yticklabels={0.7,0.8,0.9},
+%
+]
+\addplot[black,thick] table[x index=0, 
+  y index=4,
+  col sep=comma,
+  smooth,%each nth point=200, 
+  filter discard warning=false, 
+  unbounded coords=discard]
+  {results.csv};
+\addlegendentry{${g_m}_1$}
+
+\nextgroupplot[
+ylabel={size},
+]
+\addplot[black,thick] table[x index=0, 
+  y index=5,
+  col sep=comma,
+  smooth,%each nth point=200, 
+  filter discard warning=false, 
+  unbounded coords=discard]
+  {results.csv};
+\addlegendentry{${g_m}_2$}
+
+\nextgroupplot[
+ymin=0,ymax=101,
+ylabel={quality},
+ytick={1,20,40,60,80},
+yticklabels={1,,40,,\textcolor{white}{.}80},
+]
+\addplot[black,thick] table[x index=0, 
+  y index=1,
+  col sep=comma,
+  smooth,%each nth point=200, 
+  filter discard warning=false, 
+  unbounded coords=discard]
+  {results.csv};
+\addlegendentry{${a}_1$}
+
+\nextgroupplot[
+ymin=-0.1,ymax=5.1,
+ylabel={sharpen},
+ytick={0,2,4},
+yticklabels={0,2,\textcolor{white}{0.}4},
+]
+\addplot[black,thick] table[x index=0, 
+  y index=2,
+  col sep=comma,
+  smooth,%each nth point=200, 
+  filter discard warning=false, 
+  unbounded coords=discard]
+  {results.csv};
+\addlegendentry{${a}_2$}
+
+\nextgroupplot[
+ymin=-0.1,ymax=5.1,
+ylabel={noise},
+ytick={0,2,4},
+yticklabels={0,2,\textcolor{white}{0.}4},
+]
+\addplot[black,thick] table[x index=0, 
+  y index=3,
+  col sep=comma,
+  smooth,%each nth point=200, 
+  filter discard warning=false, 
+  unbounded coords=discard]
+  {results.csv};
+\addlegendentry{${a}_3$}
+
+\end{groupplot}
+\end{tikzpicture}
+
+\end{document}
+

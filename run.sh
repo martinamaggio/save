@@ -61,6 +61,8 @@ prepare ()
 		  echo "  [prepare] $V already unpacked"
 	else
 		  echo "  [prepare] $V unpacking"
+      echo "${ORIG}"
+      echo "${V}"
 		  mplayer -vo jpeg:quality=100:outdir=${ORIG} \
 		  	./mp4/$V.mp4 > /dev/null 2>&1
 		  echo "  [prepare] $V unpacking terminated"
@@ -101,7 +103,12 @@ encode ()
 	echo "  [encode] creating figure terminated"
 }
 
+convert ()
+{
+  V=$1; FOLDER_SRC=$2; FOLDER_DST=mp4;
+  python ./converter.py $V $FOLDER_SRC
 
+}
 # ----------------------------------------------------------------- #
 
 # basic handling of cleaning and usage printing
@@ -112,6 +119,21 @@ fi
 if [[ "$1" == clean ]]; then
 	clean;
 	exit;
+fi
+
+# basic handling of file conversion
+if [[ "$1" == convert ]]; then
+  TO_CONVERT=to_convert
+  VIDEOS=`ls to_convert`
+  for VIDEO in $VIDEOS; do
+    filetype=`ls $TO_CONVERT/$VIDEO | rev | cut -d . -f 1 | rev`  #maybe a convuluted solution, but it works for now
+    if [[ "$filetype" != "mp4" ]]; then
+      convert $VIDEO $TO_CONVERT;
+    else
+      echo "File $VIDEO already in desired format"
+    fi
+  done
+  exit;
 fi
 
 # normal usage mode
