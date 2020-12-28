@@ -41,4 +41,6 @@
    adjusted to zoom (because it is constructed to be general). The
    tikz code that generated the figure can be modified to zoom in
    certain areas (found in the file code/latex/figure.tex).
+
+4. To be able to use the video converter, please refer to the scripts/ folder first to install dependencies
    
