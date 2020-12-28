@@ -101,9 +101,22 @@ encode ()
 	echo "  [encode] creating figure terminated"
 }
 
+convert () 
+{
+	V=$1; FOLDER_SRC=$2; FOLDER_DST=mp4;
+	python3 ./conv.py $V $FOLDER_SRC
+
+	# copy the converted file to mp4/ iff conv.py ended with no errors
+	if [[ "$?" -eq 0 ]]; then
+		echo "Copying $V.mp4 to $FOLDER_DST"
+		cp "$FOLDER_SRC/$V.mp4" "$FOLDER_DST"
+	fi
+
+	echo "Deleting $V.mp4 from $FOLDER_SRC"
+	rm -rf "$FOLDER_SRC/$V.mp4"
+}
 
 # ----------------------------------------------------------------- #
-
 # basic handling of cleaning and usage printing
 if [[ "$#" -eq 0 ]]; then
 	print_usage;
@@ -111,6 +124,23 @@ if [[ "$#" -eq 0 ]]; then
 fi
 if [[ "$1" == clean ]]; then
 	clean;
+	exit;
+fi
+# simple handling of file conversion
+if [[ "$1" == convert ]]; then
+	TO_CONVERT=to_convert/
+	VIDEOS=`ls to_convert`
+	for VIDEO in $VIDEOS; do
+		# gets the extension of the file (the string after the last ".")
+		filetype=`ls $TO_CONVERT$VIDEO | rev | cut -d . -f 1 | rev`	# maybe a convoluted solution, but it works for now
+		if [[ "$filetype" != "mp4" ]]; then
+			convert $VIDEO $TO_CONVERT;
+		else
+			echo "File $VIDEO already exists in desired format"
+			echo "Copying $VIDEO to mp4/"
+			cp "$TO_CONVERT$VIDEO" mp4
+		fi
+	done
 	exit;
 fi
 
@@ -132,4 +162,3 @@ done
 
 # cleanup
 rm -f ./code/*/*.pyc
-

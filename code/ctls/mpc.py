@@ -9,9 +9,15 @@ def initialize_mpc():
     D = np.matrix([[0,0,0],[0,0,0]]);
 
     # Control parameters
-    L = 4;
-    Q = np.diag(np.tile(np.matrix([[100,0.001]]),[1,L]).tolist()[0]);
-    R = np.diag(np.tile(np.matrix([[100,100000,100000]]),[1,L]).tolist()[0]);
+    L = 4;      # Prediction horizon
+
+    # goals' weights
+    Q = np.diag(np.tile(np.matrix([[100,0.001]]),[1,L]).tolist()[0]);               # SSIM (w_1 = 100)
+                                                                                    # mpc (w_2 = 0.001)
+    # actuators weights
+    R = np.diag(np.tile(np.matrix([[100,100000,100000]]),[1,L]).tolist()[0]);       # quality (d_1 = 100),
+                                                                                    # sharpen (d_2 = 10^5),
+                                                                                    # noise (d_3 = 106 5)
 
     # Control saturations
     Umin = np.matrix([[1],[0],[0]]);
@@ -29,7 +35,8 @@ def initialize_mpc():
     sp = np.matrix([[0.9],[25000]]);
     
     # Initializing the controller
-    controller = reg.MPCController(A, B, C, D, L, Q, R, Lk, Pk, Qn, Rn,	Umin, Umax, DeltaUmin, DeltaUmax,	optim = 1, fast = 0, time_varying = 1)
+    controller = reg.MPCController(A, B, C, D, L, Q, R, Lk, Pk, Qn, Rn,	Umin, Umax, DeltaUmin, DeltaUmax,
+                                   optim = 1, fast = 0, time_varying = 1)
 
     return controller;
 

@@ -17,7 +17,7 @@ class BangbangController:
 		if (current_outputs.item(0) < setpoints.item(0)):
 			self.sharpen = 5
 			self.noise = 5
-		elif (current_outputs.item(0) < setpoints.item(0)):
+		elif (current_outputs.item(0) > setpoints.item(0)):
 			self.sharpen = 0
 			self.noise = 0
 	
